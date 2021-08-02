@@ -91,7 +91,7 @@ module.exports.login = async (req, res, next) => {
       'jwt',
       token,
       { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: true },
-    ).send({ message: 'Aвторизация прошла успешно' });
+    ).send({ message: 'Аутентификация прошла успешно' });
   } catch (err) {
     next(err);
   }
