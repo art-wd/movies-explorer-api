@@ -7,6 +7,8 @@ const movies = require('./movies');
 
 const auth = require('../middlewares/auth');
 
+const NotFoundError = require('../errors/not-found-err');
+
 router.post('/signup', createUser);
 router.post('/signin', login);
 
@@ -17,6 +19,6 @@ router.use('/movies', movies);
 
 router.post('/signout', logout);
 
-// router.use('*', () => { });
+router.use('*', () => { throw new NotFoundError('Запрошен несуществующий роут.'); });
 
 module.exports = router;
