@@ -46,7 +46,7 @@ module.exports.createMovie = async (req, res, next) => {
     res.status(201).send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Переданы некорректные данные при создании фильма.'));
+      next(new BadRequestError('Переданы некорректные данные при создании фильма'));
       return;
     }
     next(err);
@@ -58,13 +58,13 @@ module.exports.deleteMovie = async (req, res, next) => {
     const movie = await Movie.findById(req.params.cardId);
     if (!movie) throw new NotFoundError('Фильм с указанным id не найдена.');
 
-    if (movie.owner.toString() !== req.user._id) throw new ForbiddenError('Чужой фильм.');
+    if (movie.owner.toString() !== req.user._id) throw new ForbiddenError('Чужой фильм');
 
     const deletedMovie = await Movie.findByIdAndDelete(req.params.cardId);
     res.send(deletedMovie);
   } catch (err) {
     if (err.name === 'CastError') {
-      next(new BadRequestError('Передан некорректный id фильма.'));
+      next(new BadRequestError('Передан некорректный id фильма'));
       return;
     }
     next(err);

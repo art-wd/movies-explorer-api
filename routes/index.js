@@ -19,6 +19,6 @@ router.use('/movies', movies);
 
 router.post('/signout', logout);
 
-router.use('*', () => { throw new NotFoundError('Запрошен несуществующий роут.'); });
+router.use('*', () => { throw new NotFoundError('Запрошен несуществующий роут'); });
 
 module.exports = router;

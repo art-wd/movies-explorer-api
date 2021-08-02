@@ -13,11 +13,11 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 module.exports.getCurrentUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    if (!user) throw new NotFoundError('Пользователь с указанным id не найден.');
+    if (!user) throw new NotFoundError('Пользователь с указанным id не найден');
     res.send(user);
   } catch (err) {
     if (err.name === 'CastError') {
-      next(new BadRequestError('Передан некорректный id при получении пользователя.'));
+      next(new BadRequestError('Передан некорректный id при получении пользователя'));
       return;
     }
     next(err);
@@ -33,16 +33,16 @@ module.exports.updateCurrentUser = async (req, res, next) => {
       { email, name },
       { new: true, runValidators: true },
     );
-    if (!user) throw new NotFoundError('Пользователь с указанным id не найден.');
+    if (!user) throw new NotFoundError('Пользователь с указанным id не найден');
 
     res.send(user);
   } catch (err) {
     if (err.name === 'CastError') {
-      next(new BadRequestError('Передан некорректный id при обновлении профиля.'));
+      next(new BadRequestError('Передан некорректный id при обновлении профиля'));
       return;
     }
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
+      next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
       return;
     }
     next(err);
@@ -60,11 +60,11 @@ module.exports.createUser = async (req, res, next) => {
     res.status(201).send(user);
   } catch (err) {
     if (err.name === 'MongoError' && err.code === 11000) {
-      next(new ConflictError('Такой e-mail уже существует.'));
+      next(new ConflictError('Такой e-mail уже существует'));
       return;
     }
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+      next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
       return;
     }
     next(err);
@@ -76,10 +76,10 @@ module.exports.login = async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await this.findOne({ email }).select('+password');
-    if (!user) throw new UnauthorizedError('Неправильные почта или пароль.');
+    if (!user) throw new UnauthorizedError('Неправильные почта или пароль');
 
     const matched = await bcrypt.compare(password, user.password);
-    if (!matched) throw new UnauthorizedError('Неправильные почта или пароль.');
+    if (!matched) throw new UnauthorizedError('Неправильные почта или пароль');
 
     const token = jwt.sign(
       { _id: user._id },
@@ -91,7 +91,7 @@ module.exports.login = async (req, res, next) => {
       'jwt',
       token,
       { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: true },
-    ).send({ message: 'Aвторизация прошла успешно.' });
+    ).send({ message: 'Aвторизация прошла успешно' });
   } catch (err) {
     next(err);
   }
@@ -99,7 +99,7 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.logout = async (req, res, next) => {
   try {
-    res.clearCookie('jwt').send({ message: 'Выход прошёл успешно.' });
+    res.clearCookie('jwt').send({ message: 'Выход прошёл успешно' });
   } catch (err) {
     next(err);
   }

@@ -7,7 +7,7 @@ const UnauthorizedError = require('../errors/unauthorized-err');
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
 
-  if (!token) throw new UnauthorizedError('Необходима авторизация.');
+  if (!token) throw new UnauthorizedError('Необходима авторизация');
 
   try {
     const payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-super-secret');
@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     next();
   } catch (err) {
     if (err.toString() === 'JsonWebTokenError: jwt malformed') {
-      next(new UnauthorizedError('Необходима авторизация.'));
+      next(new UnauthorizedError('Необходима авторизация'));
       return;
     }
     next(err);
