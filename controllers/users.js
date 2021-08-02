@@ -1,4 +1,9 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getCurrentUser = async (req, res, next) => {
   try {
@@ -35,6 +40,75 @@ module.exports.updateCurrentUser = async (req, res, next) => {
     //   next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
     //   return;
     // }
+    next(err);
+  }
+};
+
+module.exports.createUser = async (req, res, next) => {
+  try {
+    const { email, password, name } = req.body;
+    const hash = await bcrypt.hash(password, 10);
+
+    await User.create({ email, password: hash, name });
+
+    const user = await User.findOne({ email });
+    res.status(201).send(user);
+  } catch (err) {
+    // if (err.name === 'MongoError' && err.code === 11000) {
+    //   next(new ConflictError('Такой e-mail уже существует.'));
+    //   return;
+    // }
+    // if (err.name === 'ValidationError') {
+    //   next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+    //   return;
+    // }
+    next(err);
+  }
+};
+
+module.exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    // const user = await User.findUserByCredentials({ email, password });
+
+    const user = await this.findOne({ email }).select('+password');
+    // if (!user) return Promise.reject(new UnauthorizedError('Неправильные почта или пароль.'));
+    if (!user) throw new Error('Неправильные почта или пароль.');
+
+    const matched = await bcrypt.compare(password, user.password);
+    // if (!matched) return Promise.reject(new UnauthorizedError('Неправильные почта или пароль.'));
+    if (!matched) throw new Error('Неправильные почта или пароль.');
+
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'dev-super-secret',
+      { expiresIn: '7d' },
+    );
+
+    res.cookie(
+      'jwt',
+      token,
+      { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: true },
+    ).send({ message: 'Aвторизация прошла успешно.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// userSchema.statics.findUserByCredentials = async function foo({ email, password }) {
+//   const user = await this.findOne({ email }).select('+password');
+//   if (!user) return Promise.reject(new UnauthorizedError('Неправильные почта или пароль.'));
+
+//   const matched = await bcrypt.compare(password, user.password);
+//   if (!matched) return Promise.reject(new UnauthorizedError('Неправильные почта или пароль.'));
+
+//   return user;
+// };
+
+module.exports.logout = async (req, res, next) => {
+  try {
+    res.clearCookie('jwt').send({ message: 'Выход прошёл успешно.' });
+  } catch (err) {
     next(err);
   }
 };
