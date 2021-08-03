@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 
@@ -31,6 +32,7 @@ app.use(corsHandler);
 app.use(router);
 
 app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT);
