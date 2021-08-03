@@ -11,6 +11,7 @@ const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { mongooseConnectURI, mongooseConnectOptions } = require('./constants/constants');
 const errorHandler = require('./middlewares/error-handler');
+const corsHandler = require('./middlewares/cors-handler');
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 mongoose.connect(mongooseConnectURI, mongooseConnectOptions);
+
+app.use(corsHandler);
 
 app.use(router);
 
