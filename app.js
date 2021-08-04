@@ -32,6 +32,8 @@ mongoose.connect(mongooseConnectURI, mongooseConnectOptions);
 
 app.use(cors({
   origin: [
+    'https://chagin.movies.nomoredomains.club',
+    'http://chagin.movies.nomoredomains.club',
     'localhost:3000',
   ],
   credentials: true,
