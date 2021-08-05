@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const { errors } = require('celebrate');
 
-const { PORT = 3000, MONGO_CONNECT_URI = 'mongodb://localhost:27017/beatfilmsdb' } = process.env;
+const { PORT = 3000 } = process.env;
 
 const router = require('./routes/index');
 
@@ -15,7 +15,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');
 const errorHandler = require('./middlewares/error-handler');
 
-const { MONGO_CONNECT_OPTIONS, ALLOWED_CORS } = require('./utils/constants');
+const { MONGO_CONNECT_URI, MONGO_CONNECT_OPTIONS, ALLOWED_CORS } = require('./utils/constants');
 
 const app = express();
 

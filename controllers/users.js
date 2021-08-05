@@ -49,6 +49,10 @@ module.exports.updateCurrentUser = async (req, res, next) => {
 
     res.send(user);
   } catch (err) {
+    if (err.name === 'MongoError' && err.code === 11000) {
+      next(new ConflictError(EMAIL_CONFLICT_ERROR));
+      return;
+    }
     if (err.name === 'CastError') {
       next(new BadRequestError(USER_ID_UPDATE_BAD_REQUEST_ERROR));
       return;

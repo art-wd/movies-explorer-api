@@ -1,3 +1,5 @@
+const MONGO_CONNECT_URI = 'mongodb://localhost:27017/beatfilmsdb';
+
 const MONGO_CONNECT_OPTIONS = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -34,6 +36,7 @@ const FILM_DATA_CREATE_BAD_REQUEST_ERROR = 'Переданы некоррект�
 const FILM_OWNER_ID_FORBIDDEN_ERROR = 'Чужой фильм';
 
 module.exports = {
+  MONGO_CONNECT_URI,
   MONGO_CONNECT_OPTIONS,
   ALLOWED_CORS,
   INTERNAL_SERVER_ERROR,
