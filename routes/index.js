@@ -9,6 +9,7 @@ const movies = require('./movies');
 const auth = require('../middlewares/auth');
 
 const NotFoundError = require('../errors/not-found-err');
+const { ROUT_NOT_FOUND_ERROR } = require('../utils/constants');
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -31,6 +32,6 @@ router.use('/movies', movies);
 
 router.post('/signout', logout);
 
-router.use('*', () => { throw new NotFoundError('Запрошен несуществующий роут'); });
+router.use('*', () => { throw new NotFoundError(ROUT_NOT_FOUND_ERROR); });
 
 module.exports = router;

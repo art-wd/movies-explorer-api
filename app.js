@@ -7,14 +7,15 @@ const helmet = require('helmet');
 const cors = require('cors');
 const { errors } = require('celebrate');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, MONGO_CONNECT_URI = 'mongodb://localhost:27017/beatfilmsdb' } = process.env;
 
 const router = require('./routes/index');
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./middlewares/limiter');
-
-const { mongooseConnectURI, mongooseConnectOptions } = require('./utils/constants');
 const errorHandler = require('./middlewares/error-handler');
+
+const { MONGO_CONNECT_OPTIONS, ALLOWED_CORS } = require('./utils/constants');
 
 const app = express();
 
@@ -28,14 +29,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-mongoose.connect(mongooseConnectURI, mongooseConnectOptions);
+mongoose.connect(MONGO_CONNECT_URI, MONGO_CONNECT_OPTIONS);
 
 app.use(cors({
-  origin: [
-    'https://chagin.movies.nomoredomains.club',
-    'http://chagin.movies.nomoredomains.club',
-    'localhost:3000',
-  ],
+  origin: ALLOWED_CORS,
   credentials: true,
 }));
 
