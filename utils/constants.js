@@ -10,7 +10,6 @@ const MONGO_CONNECT_OPTIONS = {
 const ALLOWED_CORS = [
   'https://chagin.movies.nomoredomains.club',
   'http://chagin.movies.nomoredomains.club',
-  'localhost:3000',
 ];
 
 const INTERNAL_SERVER_ERROR = 'На сервере произошла ошибка';
